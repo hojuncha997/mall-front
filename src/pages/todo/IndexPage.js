@@ -17,13 +17,13 @@ const IndexPage = () => {
     <BasicLayout>
       <div className="w-full flex m-2 p-2">
         <div
-          className="text-xl p-2 w-20 font-extrabold text-center underline"
+          className="text-xl m-1 p-2 w-20 font-extrabold text-center underline"
           onClick={handleClickList}
         >
           LIST
         </div>
         <div
-          className="text-xl  p-2 w-20 font-extrabold text-center underline"
+          className="text-xl m-1  p-2 w-20 font-extrabold text-center underline"
           onClick={handleClickAdd}
         >
           ADD
