@@ -18,6 +18,7 @@ const ReadPage = () => {
   // 쿼리스트링 생성
   const queryStr = createSearchParams({ page, size }).toString();
 
+  //   개별 상세화면에서 수정 페이지로 쿼리스트링을 유지하면서 이동
   const moveToModify = useCallback(
     (tno) => {
       // navigate의 search 프로퍼티의 값으로 queryStr을 넘김
@@ -26,12 +27,18 @@ const ReadPage = () => {
     [tno]
   );
 
+  //   상세화면에서 리스트로 쿼리스트링을 유지하면서 이동
+  const moveToList = useCallback(() => {
+    navigate({ pathname: `/todo/list`, search: queryStr });
+  }, [page, size]);
+
   return (
     <>
       <div className="text-3xl font-extrabold">
         Todo Read Page Component {tno}
         <div>
           <button onClick={() => moveToModify(33)}> Test Modify</button>
+          <button onClick={() => moveToList()}> Test List</button>
         </div>
       </div>
     </>
