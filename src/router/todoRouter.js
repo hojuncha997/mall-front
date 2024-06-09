@@ -1,15 +1,16 @@
 import { Suspense, lazy } from "react";
 import { Navigate } from "react-router-dom";
 
-const loading = <div>Loading...</div>;
+const Loading = <div>Loading...</div>;
 const TodoList = lazy(() => import("../pages/todo/ListPage"));
+const TodoRead = lazy(() => import("../pages/todo/ReadPage"));
 
 const todoRouter = () => {
   return [
     {
       path: "list",
       element: (
-        <Suspense fallback={loading}>
+        <Suspense fallback={Loading}>
           <TodoList />
         </Suspense>
       ),
@@ -19,6 +20,14 @@ const todoRouter = () => {
       // 리다이렉션
       path: "",
       element: <Navigate replace to="list" />,
+    },
+    {
+      path: "read/:tno",
+      element: (
+        <Suspense fallback={Loading}>
+          <TodoRead />
+        </Suspense>
+      ),
     },
   ];
 };
