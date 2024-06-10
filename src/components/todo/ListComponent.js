@@ -17,7 +17,7 @@ const initState = {
 };
 
 const ListComponent = () => {
-  const { page, size, moveToList } = useCustomMove(); //moveToList도 추가
+  const { page, size, moveToList, refresh } = useCustomMove(); //refresh 추가
 
   const [serverData, setServerData] = useState(initState);
 
@@ -29,7 +29,7 @@ const ListComponent = () => {
     // .catch(err => {
     //     console.log(err);
     // });
-  }, [page, size]);
+  }, [page, size, refresh]); // refresh 추가하는 이유는 refresh가 변경될 때마다 useEffect가 호출되도록 하기 위함
 
   return (
     <div className="mt-10 ml-2 mr-2 border-2 border-blue-100">
