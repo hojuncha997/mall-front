@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getList } from "../../api/todoApi";
 import useCustomMove from "../../hooks/useCustomMove";
+import PageComponent from "../common/PageComponent";
 
 const initState = {
   dtoList: [],
@@ -16,7 +17,7 @@ const initState = {
 };
 
 const ListComponent = () => {
-  const { page, size } = useCustomMove();
+  const { page, size, moveToList } = useCustomMove(); //moveToList도 추가
 
   const [serverData, setServerData] = useState(initState);
 
@@ -51,7 +52,9 @@ const ListComponent = () => {
             </div>
           </div>
         ))}
-        Todo List Component
+
+        {/* PageComponent추가 */}
+        <PageComponent serverData={serverData} movePage={moveToList} />
       </div>
     </div>
   );
