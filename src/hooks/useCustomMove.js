@@ -54,11 +54,15 @@ const useCustomMove = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("refresh:", refresh);
-  });
+  // 조회 페이지 이동
+  const moveToRead = (num) => {
+    navigate({
+      pathname: `../read/${num}`,
+      search: queryDefault, // 수정 시 기존 쿼리 스트링 유지 목적
+    });
+  };
 
-  return { moveToList, moveToModify, page, size, refresh };
+  return { moveToList, moveToModify, moveToRead, page, size, refresh };
 };
 
 export default useCustomMove;

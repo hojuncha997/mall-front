@@ -17,7 +17,7 @@ const initState = {
 };
 
 const ListComponent = () => {
-  const { page, size, moveToList, refresh } = useCustomMove(); //refresh 추가
+  const { page, size, refresh, moveToList, moveToRead } = useCustomMove(); //refresh 추가
 
   const [serverData, setServerData] = useState(initState);
 
@@ -38,6 +38,7 @@ const ListComponent = () => {
           <div
             key={todo.tno}
             className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"
+            onClick={() => moveToRead(todo.tno)} // 이벤트 처리 추가
           >
             <div className="flex">
               <div className="w-1/12 p-2 text-2xl font-extrabold">
