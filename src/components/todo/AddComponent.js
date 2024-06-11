@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { postAdd } from "../../api/todoApi";
 
 const initState = {
   title: "",
@@ -15,7 +16,15 @@ const AddComponent = () => {
   };
 
   const handleClickAdd = () => {
-    console.log(todo);
+    // console.log(todo);
+    postAdd(todo)
+      .then((result) => {
+        console.log(result);
+        setTodo({ ...initState });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -48,7 +57,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative flex flex-wrap items-stretch w-full mb-4">
-          <div className="w-1/5 p-6 font-bold text-right ">WRITER</div>
+          <div className="w-1/5 p-6 font-bold text-right ">DUEDATE</div>
           <input
             className="w-4/5 p-6 border border-solid rounded-r shadow-md border-neutral-500"
             name="dueDate"

@@ -19,3 +19,9 @@ export const getList = async (pageParam) => {
 
   return res.data;
 };
+
+// 등록
+export const postAdd = async (todoObj) => {
+  const res = await axios.post(`${prefix}/`, todoObj);
+  return res.data;
+};
