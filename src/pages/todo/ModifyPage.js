@@ -1,17 +1,26 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
-const ModifyPage = ({ tno }) => {
-  const navigate = useNavigate();
+import { useParams } from "react-router-dom";
+import ModifyComponent from "../../components/todo/ModifyComponent";
 
-  const moveToRead = () => {
-    navigate({ pathname: `/todo/read/${tno}` });
-  };
+const ModifyPage = () => {
+  // const navigate = useNavigate();
+  const { tno } = useParams();
 
-  const moveToList = () => {
-    navigate({ pathname: `/todo/List` });
-  };
+  // const moveToRead = () => {
+  //   navigate({ pathname: `/todo/read/${tno}` });
+  // };
 
-  return <div className="text-3xl font-extrabold">Todo Modify Page</div>;
+  // const moveToList = () => {
+  //   navigate({ pathname: `/todo/List` });
+  // };
+
+  return (
+    <div className="w-full p-4 bg-white">
+      <div className="text-3xl font-extrabold">Todo Modify Page</div>
+      <ModifyComponent tno={tno} />
+    </div>
+  );
 };
 
 export default ModifyPage;
