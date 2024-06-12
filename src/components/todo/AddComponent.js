@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { postAdd } from "../../api/todoApi";
+import ResultModal from "../common/ResultModal";
+import useCustomMove from "../../hooks/useCustomMove";
 
 const initState = {
   title: "",
@@ -10,6 +12,11 @@ const initState = {
 const AddComponent = () => {
   const [todo, setTodo] = useState({ ...initState });
 
+  // 결과 데이터가 있는 경우 ResultModal을 보여준다.
+  const [result, setResult] = useState(null);
+
+  const { moveToList } = useCustomMove(); // useCustomMove() 훅 사용
+
   const handleChangeTodo = (event) => {
     todo[event.target.name] = event.target.value;
     setTodo({ ...todo });
@@ -19,7 +26,7 @@ const AddComponent = () => {
     // console.log(todo);
     postAdd(todo)
       .then((result) => {
-        console.log(result);
+        setResult(result.TNO); // 결과 데이터 변경
         setTodo({ ...initState });
       })
       .catch((error) => {
@@ -27,8 +34,24 @@ const AddComponent = () => {
       });
   };
 
+  const closeModal = () => {
+    setResult(null);
+    moveToList(); // moveToList() 함수 호출 -> 목록으로 이동
+  };
+
   return (
     <div className="p-4 m-2 mt-10 border-2 border-sky-200">
+      {/* 모달 처리 */}
+      {result ? (
+        <ResultModal
+          title="Add Result"
+          content={`New ${result} Added`}
+          callbackFn={closeModal}
+        />
+      ) : (
+        <></>
+      )}
+
       <div className="flex justify-center">
         <div className="relative flex flex-wrap items-stretch w-full mb-4">
           <div className="w-1/5 p-6 font-bold text-right">TITLE</div>
