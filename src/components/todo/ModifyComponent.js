@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOne } from "../../api/todoApi";
+import { getOne, putOne, deleteOne } from "../../api/todoApi";
 
 const initState = {
   tno: 0,
@@ -14,6 +14,20 @@ const ModifyComponent = ({ tno, moveList, moveRead }) => {
   useEffect(() => {
     getOne(tno).then((data) => setTodo(data));
   }, [tno]);
+
+  //   수정버튼 클릭 시
+  const handleClickModify = () => {
+    putOne(todo).then((data) => {
+      console.log("modify result: " + data);
+    });
+  };
+
+  //   삭제버튼 클릭 시
+  const handleClickDelete = () => {
+    deleteOne(tno).then((data) => {
+      console.log("delete result: " + data);
+    });
+  };
 
   const handleChangeTodo = (event) => {
     todo[event.target.name] = event.target.value;
@@ -91,12 +105,14 @@ const ModifyComponent = ({ tno, moveList, moveRead }) => {
         <button
           type="button"
           className="w-32 p-4 m-2 text-xl text-white bg-red-500 rounded"
+          onClick={handleClickDelete}
         >
           Delete
         </button>
         <button
           type="button"
           className="w-32 p-4 m-2 text-xl text-white bg-blue-500 rounded"
+          onClick={handleClickModify}
         >
           Modify
         </button>
