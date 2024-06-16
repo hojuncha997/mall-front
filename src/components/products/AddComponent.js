@@ -1,6 +1,7 @@
 // /pages/products/AddPage 에서 사용
 
 import { useRef, useState } from "react";
+import { postAdd } from "../../api/productsApi";
 
 const initState = {
   pname: "",
@@ -20,8 +21,6 @@ const AddComponent = () => {
   };
 
   const handleClickAdd = (event) => {
-    // console.log("product: ", product);
-
     const files = uploadRef.current.files;
     const formData = new FormData();
 
@@ -33,6 +32,11 @@ const AddComponent = () => {
     formData.append("pname", product.pname);
     formData.append("pdesc", product.pdesc);
     formData.append("price", product.price);
+
+    console.log(formData);
+
+    // API 전송
+    postAdd(formData);
   };
 
   return (
