@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter, createBrowserRouter } from "react-router-dom";
 import AboutPage from "../pages/AboutPage";
 import todoRouter from "./todoRouter";
+import ProductsRouter from "../pages/products/productRouter";
 
 // createBrowserRouter()를 통해 특정 경로에 대응되는 컴포넌트를 설정한다.
 // 경로추가는 파라미터로 전달된느 배열의 내용물로 결정된다.
@@ -15,6 +16,8 @@ const Main = lazy(() => import("../pages/MainPage"));
 const About = lazy(() => import("../pages/AboutPage"));
 const TodoIndex = lazy(() => import("../pages/todo/IndexPage"));
 const TodoList = lazy(() => import("../pages/todo/ListPage"));
+
+const ProductsIndex = lazy(() => import("../pages/products/indexPage"));
 
 const root = createBrowserRouter([
   {
@@ -41,6 +44,16 @@ const root = createBrowserRouter([
       </Suspense>
     ),
     children: todoRouter(),
+  },
+
+  {
+    path: "products",
+    element: (
+      <Suspense fallback={Loading}>
+        <ProductsIndex />
+      </Suspense>
+    ),
+    children: ProductsRouter(),
   },
 ]);
 
