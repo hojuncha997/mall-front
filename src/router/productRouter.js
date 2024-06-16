@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 
 const ProductsRouter = () => {
   const Loading = <div>Loading...</div>;
-  const ProductsList = lazy(() => import("../products/ListPage"));
-  const ProductsAdd = lazy(() => import("../products/AddPage"));
+  const ProductsList = lazy(() => import("../pages/products/ListPage"));
+  const ProductsAdd = lazy(() => import("../pages/products/AddPage"));
 
   return [
     {
