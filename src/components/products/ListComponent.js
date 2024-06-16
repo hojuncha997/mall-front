@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getList } from "../../api/productsApi";
 import useCustomMove from "../../hooks/useCustomMove";
 import FetchingModal from "../common/FetchingModal";
+import PageComponent from "../common/PageComponent";
 
 // API서버에서 가져온 목록 데이터는 이미지 파일의 이름이 포함돼 있으므로 이를 화면에 출력해줄 때 서버의 경로를 시용해야 한다. 따라서 임포트
 import { API_SERVER_HOST } from "../../api/todoApi";
@@ -72,6 +73,7 @@ const ListComponent = () => {
           </div>
         ))}
       </div>
+      <PageComponent serverData={serverData} movePage={moveToList} />
     </div>
   );
 };
