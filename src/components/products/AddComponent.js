@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { postAdd } from "../../api/productsApi";
 import FetchingModal from "../common/fetchingModal";
 import ResultModal from "../common/ResultModal";
+import useCustomMove from "../../hooks/useCustomMove";
 
 const initState = {
   pname: "",
@@ -19,6 +20,9 @@ const AddComponent = () => {
 
   const [fetching, setFetching] = useState(false);
   const [result, setResult] = useState(null);
+
+  //   이동을 위한 함수
+  const { moveToList } = useCustomMove();
 
   const handleChangeProduct = (event) => {
     product[event.target.name] = event.target.value;
@@ -49,6 +53,7 @@ const AddComponent = () => {
 
   const closeModal = () => {
     setResult(null);
+    moveToList({ page: 1 }); // 모달이 닫히면 이동
   };
 
   return (
