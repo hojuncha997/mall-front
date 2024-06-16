@@ -47,7 +47,7 @@ const ListComponent = () => {
           <div
             key={product.pno}
             className="w-1/2 p-1 rounded shadow-md border-2"
-            onClick={() => moveToList(product.pno)}
+            onClick={() => moveToRead(product.pno)}
           >
             <div className="flex flex-col h-full">
               <div className="font-extrabold text-2xl p-2 w-full">
