@@ -30,3 +30,16 @@ export const getOne = async (pno) => {
   const res = await axios.get(`${host}/${pno}`);
   return res.data;
 };
+
+// 개별 상품정보 수정
+export const putOne = async (pno, product) => {
+  const header = { headers: { "Content-Type": "multipart/form-data" } };
+  const res = await axios.put(`${host}/${pno}`, product, header);
+  return res.data;
+};
+
+// 개별 상품 삭제
+export const deleteOne = async (pno) => {
+  const res = await axios.delete(`${host}/${pno}`);
+  return res.data;
+};
