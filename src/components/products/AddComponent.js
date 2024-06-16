@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { postAdd } from "../../api/productsApi";
 import FetchingModal from "../common/fetchingModal";
+import ResultModal from "../common/ResultModal";
 
 const initState = {
   pname: "",
@@ -17,6 +18,7 @@ const AddComponent = () => {
   const uploadRef = useRef();
 
   const [fetching, setFetching] = useState(false);
+  const [result, setResult] = useState(null);
 
   const handleChangeProduct = (event) => {
     product[event.target.name] = event.target.value;
@@ -41,12 +43,26 @@ const AddComponent = () => {
     // API 전송
     postAdd(formData).then((data) => {
       setFetching(false);
+      setResult(data.result);
     });
+  };
+
+  const closeModal = () => {
+    setResult(null);
   };
 
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
       {fetching ? <FetchingModal /> : <></>}
+      {result ? (
+        <ResultModal
+          title={"Product Add Result"}
+          content={`${result}번 등록 완료`}
+          callbackFn={closeModal}
+        />
+      ) : (
+        <></>
+      )}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
