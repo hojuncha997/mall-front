@@ -24,3 +24,9 @@ export const getList = async (pageParam) => {
 
   return res.data;
 };
+
+//  개별 상품 조회
+export const getOne = async (pno) => {
+  const res = await axios.get(`${host}/${pno}`);
+  return res.data;
+};

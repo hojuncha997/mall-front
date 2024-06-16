@@ -1,11 +1,12 @@
 import { Suspense, lazy } from "react";
 import { Navigate } from "react-router-dom";
 
-const ProductsRouter = () => {
-  const Loading = <div>Loading...</div>;
-  const ProductsList = lazy(() => import("../pages/products/ListPage"));
-  const ProductsAdd = lazy(() => import("../pages/products/AddPage"));
+const Loading = <div>Loading...</div>;
+const ProductsList = lazy(() => import("../pages/products/ListPage"));
+const ProductsAdd = lazy(() => import("../pages/products/AddPage"));
+const ProductRead = lazy(() => import("../pages/products/ReadPage"));
 
+const ProductsRouter = () => {
   return [
     {
       path: "list",
@@ -24,6 +25,14 @@ const ProductsRouter = () => {
       element: (
         <Suspense fallback={Loading}>
           <ProductsAdd />
+        </Suspense>
+      ),
+    },
+    {
+      path: "read/:pno",
+      element: (
+        <Suspense fallback={Loading}>
+          <ProductRead />
         </Suspense>
       ),
     },
