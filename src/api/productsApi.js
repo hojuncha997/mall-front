@@ -13,3 +13,14 @@ export const postAdd = async (product) => {
   const res = await axios.post(`${host}/`, product, header); //   경로 뒤 '/' 주의
   return res.data;
 };
+
+// 서버에서 목록 데이터를 가져오는 함수
+export const getList = async (pageParam) => {
+  const { page, size } = pageParam;
+
+  const res = await axios.get(`${host}/list`, {
+    params: { page: page, size: size },
+  });
+
+  return res.data;
+};
