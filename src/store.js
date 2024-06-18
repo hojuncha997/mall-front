@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import loginSlice from "./slices/loginSlice";
 
 /*
     configureStore()의 파라미터에는 설정에 필요한 정보들을 객체로 전달하며,
@@ -8,5 +9,7 @@ import { configureStore } from "@reduxjs/toolkit";
 */
 
 export default configureStore({
-  reducer: {},
+  reducer: {
+    loginSlice: loginSlice,
+  },
 });
