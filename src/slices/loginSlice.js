@@ -1,5 +1,6 @@
-import {createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loginPost } from "../api/memberApi";
+import { removeCookie, setCookie } from "../util/cookieUtil";
 
 const initState = {
   email: "",
@@ -22,17 +23,20 @@ const loginSlice = createSlice({
       // 입력란에 입력한 이메일이 애플리케이션의 상태가 된다.
       // useSelector를 사용하는 메뉴에서는 email값이 존재하게 됐기 때문에
       // email이 존재해야 사용할 수 있는 메뉴를 사용할 수 있게 된다.
-      return {email: data.email}
+      return { email: data.email }
       //
-      
+
 
 
     },
     logout: (state, action) => {
       console.log("logout...");
-      
+
+      // 쿠키에 저장된 데이터를 삭제한다.
+      removeCookie("member")
+
       // 상태를 초기화한다.
-      return {...initState}
+      return { ...initState }
     },
   },
 
@@ -42,6 +46,13 @@ const loginSlice = createSlice({
         console.log("loginPostAsync.fulfilled");
         // API 서버에서 로그인 시에 전송되는 데이터들을 상태 데이터로 보관하도록 처리.
         const payload = action.payload
+
+        // 정상적인 로그인 시에만 쿠키 저장
+        if (!payload.error) {
+          setCookie("member", JSON.stringify(payload), 1) // 1일 동안 쿠키 보관
+        }
+
+
         return payload
       })
       .addCase(loginPostAsync.pending, (state, action) => {
