@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // useDispatch()를 통해 리덕스 스토어에 액션을 전달한다.
 import { useDispatch } from "react-redux";
@@ -13,8 +14,6 @@ import { loginPostAsync } from "../../slices/loginSlice";
 const initState = {
     email: "",
     password: "",
-    email: '',
-    pw: ''
 }
 
 const LoginComponent = () => {
@@ -23,6 +22,8 @@ const LoginComponent = () => {
 
     // 디스패치 함수
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         loginParam[e.target.name] = e.target.value
@@ -43,6 +44,7 @@ const LoginComponent = () => {
                 alert("이메일과 패스워드를 다시 확인하세요")
             }else {
                 alert("로그인 성공")
+                navigate({pathname: "/"}, {replace: true})  // 뒤로가기 했을 때 로그인 화면을 볼 수 없도록
             }
         })
     }
