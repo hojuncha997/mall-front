@@ -10,6 +10,9 @@ import { login } from "../../slices/loginSlice";
 // 비동기 로그인 처리를 위한 함수 임포트
 import { loginPostAsync } from "../../slices/loginSlice";
 
+// 로그인과 관련된 커스텀 훅
+import useCustomLogin from "../../hooks/useCustomLogin";
+
 
 const initState = {
     email: "",
@@ -25,6 +28,8 @@ const LoginComponent = () => {
 
     const navigate = useNavigate();
 
+    const {doLogin, moveToPath} = useCustomLogin();
+
     const handleChange = (e) => {
         loginParam[e.target.name] = e.target.value
         setLoginParam({ ...loginParam })
@@ -35,18 +40,32 @@ const LoginComponent = () => {
         // loginParam을 리듀서 함수인 login()에 전달하고 이를 다시 디스패치 함수로 전달한다.
         // dispatch(login(loginParam))  //  동기화된 호출
         
-        dispatch(loginPostAsync(loginParam))    // loginSlice의 비동기 호출
-        .unwrap()   // 비동기 호출의 결과를 반환한다.
+        // dispatch(loginPostAsync(loginParam))    // loginSlice의 비동기 호출
+        // .unwrap()   // 비동기 호출의 결과를 반환한다.
+        // .then((data) => {
+        //     console.log("after unwrap...")
+        //     console.log(data)
+        //     if(data.error) {
+        //         alert("이메일과 패스워드를 다시 확인하세요")
+        //     }else {
+        //         alert("로그인 성공")
+        //         navigate({pathname: "/"}, {replace: true})  // 뒤로가기 했을 때 로그인 화면을 볼 수 없도록
+        //     }
+        // })
+
+        //  커스텀 훅을 이용한 비동기 호출
+        doLogin(loginParam) // loginSlice의 비동기 호출
         .then((data) => {
-            console.log("after unwrap...")
             console.log(data)
+
             if(data.error) {
                 alert("이메일과 패스워드를 다시 확인하세요")
             }else {
                 alert("로그인 성공")
-                navigate({pathname: "/"}, {replace: true})  // 뒤로가기 했을 때 로그인 화면을 볼 수 없도록
+                moveToPath("/")
             }
         })
+
     }
 
     return (
