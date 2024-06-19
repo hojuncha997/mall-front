@@ -40,6 +40,9 @@ const loginSlice = createSlice({
     builder
       .addCase(loginPostAsync.fulfilled, (state, action) => {
         console.log("loginPostAsync.fulfilled");
+        // API 서버에서 로그인 시에 전송되는 데이터들을 상태 데이터로 보관하도록 처리.
+        const payload = action.payload
+        return payload
       })
       .addCase(loginPostAsync.pending, (state, action) => {
         console.log("loginPostAsync.pending");

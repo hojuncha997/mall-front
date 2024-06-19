@@ -35,6 +35,16 @@ const LoginComponent = () => {
         // dispatch(login(loginParam))  //  동기화된 호출
         
         dispatch(loginPostAsync(loginParam))    // loginSlice의 비동기 호출
+        .unwrap()   // 비동기 호출의 결과를 반환한다.
+        .then((data) => {
+            console.log("after unwrap...")
+            console.log(data)
+            if(data.error) {
+                alert("이메일과 패스워드를 다시 확인하세요")
+            }else {
+                alert("로그인 성공")
+            }
+        })
     }
 
     return (
