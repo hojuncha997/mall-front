@@ -1,10 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loginPost } from "../api/memberApi";
-import { removeCookie, setCookie } from "../util/cookieUtil";
+import { removeCookie, getCookie, setCookie } from "../util/cookieUtil";
 
 const initState = {
   email: "",
 };
+
+
+const loadMemberCookie = () => {
+
+  const memberInfo = getCookie("member")
+
+  // 닉네임 처리
+  if(memberInfo && memberInfo.nickname) {
+    memberInfo.nickname = decodeURIComponent(memberInfo.nickname)
+  }
+  return memberInfo
+}
+
+
+
+
+
 
 export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
   return loginPost(param)
@@ -12,7 +29,8 @@ export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
 
 const loginSlice = createSlice({
   name: "LoginSlice",
-  initialState: initState,
+  // initialState: initState,
+  initialState: loadMemberCookie() || initState,  //  쿠키가 없다면 초깃값 사용
   reducers: {
     login: (state, action) => {
       console.log("login....");
@@ -24,7 +42,7 @@ const loginSlice = createSlice({
       // useSelector를 사용하는 메뉴에서는 email값이 존재하게 됐기 때문에
       // email이 존재해야 사용할 수 있는 메뉴를 사용할 수 있게 된다.
       return { email: data.email }
-      //
+      
 
 
 
@@ -104,5 +122,10 @@ export default loginSlice.reducer;
 
   즉, createAsyncThunk()를 이용해서 memberApi.js에 선언된 loginPost() 함수를 호출하고,
   아래쪽에 비동기 통신의 상태에 따라 동작하는 함수를 작성하는 것이다.
+
+*/
+/*
+  쿠키를 적용한 이후에는, loginSlice는 실행될 때 member 쿠키를 먼저 찾아보고 없는 경우에는 기본값을 가지도록 구성된다.
+  애플리케이션이 초기화 될 때 loginSlice도 초기화 되지만, member 쿠키가 존재하는 상태에서는 새로고침을 해도 로그인 상태가 유지된다.
 
 */
