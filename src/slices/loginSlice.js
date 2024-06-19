@@ -25,6 +25,9 @@ const loginSlice = createSlice({
     },
     logout: (state, action) => {
       console.log("logout...");
+      
+      // 상태를 초기화한다.
+      return {...initState}
     },
   },
 });
