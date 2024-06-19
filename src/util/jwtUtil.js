@@ -57,31 +57,46 @@ const requestFail = (error) => {
     return Promise.reject(error);
 }
 
-// before return response: 역할은 response가 오기 전에 처리하는 것
+// before return response: 역할은 response가 호출 함수에 도달하기 전에 가로채서 처리하는 것
+// 응답 내용이 "ERROR_ACCESS_TOKEN"인 경우 Refresh Token을 이용해서 새로운 Access Token을 발급받는다
 const beforeRes = async (response) => {
     console.log("before return response ........");
 
     console.log(response);
     const data = response.data;
 
-
+    // 만약 응답 데이터가 "ERROR_ACCESS_TOKEN"이면
     if(data && data.error === "ERROR_ACCESS_TOKEN") {
-
+        // 쿠키에서 Member 정보를 가져온다 그리고
         const memberCookieValue = getCookie("member");
 
+        // 액세스 토큰을 서버에 재발급 요청하는 함수를 호출한다. (액세스 토큰과 리프레시 토큰이 파라미터로 전달됨)
         const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken);
 
         console.log("refresh RESULT: ", result);
 
+        // 새로운 Access Token과 Refresh Token을 쿠키에 저장한다
         memberCookieValue.accessToken = result.accessToken;
         memberCookieValue.refreshToken = result.refreshToken;
 
+        // 새로운 토큰을 쿠키에 저장한다. 유효기간은 1일로 설정
         setCookie("member", JSON.stringify(memberCookieValue), 1);
-    }
-        
 
+        // 원래의 호출: 요청 객체를 가져온다. 
+        const originalRequest = response.config;
+
+        // 새로운 Access Token을 Authorization 헤더에 설정한다
+        originalRequest.headers.Authorization = `Bearer ${result.accessToken}`;
+
+        // 새로운 Access Token을 이용해서 다시 호출한다. 원래 호출하려던 API서버 경로로 호출한다.
+        return await axios(originalRequest)
+
+    }
+
+    // "ERROR_ACCESS_TOKEN"이 아닌 경우, 원래의 응답을 반환한다
     return response;
 }
+
 
 // fail response: 역할은 response가 실패했을 때 처리하는 것
 const responseFail = (error) => {
