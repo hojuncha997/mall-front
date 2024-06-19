@@ -34,7 +34,13 @@ const BasicMenu = () => {
       </div>
 
       <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
-        <div className="text-white text-sm m-1 rounded"><Link to={'/member/login'}>Login</Link></div>
+
+      {!loginState.email ? 
+      <div className="text-white text-sm m-1 rounded">
+        <Link to={'/member/login'}>Login</Link>
+        </div> : <></>
+      }
+        
       </div>
     </nav>
   );
