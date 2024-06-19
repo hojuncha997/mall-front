@@ -1,8 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { loginPost } from "../api/memberApi";
 
 const initState = {
   email: "",
 };
+
+export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
+  return loginPost(param)
+})
 
 const loginSlice = createSlice({
   name: "LoginSlice",
@@ -30,6 +35,19 @@ const loginSlice = createSlice({
       return {...initState}
     },
   },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginPostAsync.fulfilled, (state, action) => {
+        console.log("loginPostAsync.fulfilled");
+      })
+      .addCase(loginPostAsync.pending, (state, action) => {
+        console.log("loginPostAsync.pending");
+      })
+      .addCase(loginPostAsync.rejected, (state, action) => {
+        console.log("loginPostAsync.rejected");
+      })
+  }
 });
 
 export const { login, logout } = loginSlice.actions;
@@ -56,6 +74,21 @@ export default loginSlice.reducer;
 /*
   리듀서 함수(login, logout)의 두 번째 파라미터는 action이다.
   action의 payload 속성을 이용해서 컴포넌트가 전달하는 데이터를 확인할 수 있다.
+*/
 
+/*
+  useSelector()와 useDispatch()로 애플리케이션 상태를 이용할 때 필요한 또 다른 기능은 비동기 처리이다.
+  API서버를 통해 로그인/로그아웃을 처리해야 하는 작업과 로그인 시에 API서버를 연동하려면 비동기 처리가 필요하다.
+
+  과거 리덕스에서는 redux-thunk나 redux-saga와 같은 미들웨어를 사용했지만 리덕스 툴킷에서는 createAsyncThunk() 함수를 사용한다.
+  createAsyncThunk() 함수는 비동기 처리를 위한 함수를 생성한다.
+  이 함수는 액션을 생성하고, API서버와 통신하고, 결과를 처리하는 작업을 한다.
+
+  loginSlice에서는 loginPostAsync라는 이름으로 createAsyncThunk() 함수를 생성한다.
+  이 함수의 호출 결과에 따라 동작하는 extraReducers를 추가한다.
+  extraReducers는 pending, fulfilled, rejected 세 가지 상태를 가진다.
+
+  즉, createAsyncThunk()를 이용해서 memberApi.js에 선언된 loginPost() 함수를 호출하고,
+  아래쪽에 비동기 통신의 상태에 따라 동작하는 함수를 작성하는 것이다.
 
 */

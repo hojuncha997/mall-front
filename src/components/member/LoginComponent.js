@@ -6,6 +6,9 @@ import { useDispatch } from "react-redux";
 // 리듀서(함수) 임포트
 import { login } from "../../slices/loginSlice";
 
+// 비동기 로그인 처리를 위한 함수 임포트
+import { loginPostAsync } from "../../slices/loginSlice";
+
 
 const initState = {
     email: "",
@@ -29,7 +32,9 @@ const LoginComponent = () => {
     //  로그인 버튼 클릭 시 호출
     const handleClickLogin = () => {
         // loginParam을 리듀서 함수인 login()에 전달하고 이를 다시 디스패치 함수로 전달한다.
-        dispatch(login(loginParam))
+        // dispatch(login(loginParam))  //  동기화된 호출
+        
+        dispatch(loginPostAsync(loginParam))    // loginSlice의 비동기 호출
     }
 
     return (
