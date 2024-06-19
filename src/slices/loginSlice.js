@@ -10,6 +10,18 @@ const loginSlice = createSlice({
   reducers: {
     login: (state, action) => {
       console.log("login....");
+
+      //{email, pw로 구성}
+      const data = action.payload
+
+      // 입력란에 입력한 이메일이 애플리케이션의 상태가 된다.
+      // useSelector를 사용하는 메뉴에서는 email값이 존재하게 됐기 때문에
+      // email이 존재해야 사용할 수 있는 메뉴를 사용할 수 있게 된다.
+      return {email: data.email}
+      //
+      
+
+
     },
     logout: (state, action) => {
       console.log("logout...");
@@ -36,4 +48,11 @@ export default loginSlice.reducer;
 
     loginSlice 내부에 선언된 함수들을 외부에 노출하기 위해 export 처리한다.
     작성된 슬라이스는 store.js에 설정한다.
+*/
+
+/*
+  리듀서 함수(login, logout)의 두 번째 파라미터는 action이다.
+  action의 payload 속성을 이용해서 컴포넌트가 전달하는 데이터를 확인할 수 있다.
+
+
 */
