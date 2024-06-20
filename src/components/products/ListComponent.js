@@ -3,6 +3,7 @@ import { getList } from "../../api/productsApi";
 import useCustomMove from "../../hooks/useCustomMove";
 import FetchingModal from "../common/FetchingModal";
 import PageComponent from "../common/PageComponent";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 // API서버에서 가져온 목록 데이터는 이미지 파일의 이름이 포함돼 있으므로 이를 화면에 출력해줄 때 서버의 경로를 시용해야 한다. 따라서 임포트
 import { API_SERVER_HOST } from "../../api/todoApi";
@@ -22,11 +23,16 @@ const initState = {
 };
 
 const ListComponent = () => {
+
+  const {exceptionHandle} = useCustomLogin();
+
   const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
 
   const [serverData, setServerData] = useState(initState);
 
   const [fetching, setFetching] = useState(false);
+
+  
 
   useEffect(() => {
     setFetching(true);
@@ -35,7 +41,7 @@ const ListComponent = () => {
       console.log(data);
       setServerData(data);
       setFetching(false);
-    });
+    }).catch(err => exceptionHandle(err));
   }, [page, size, refresh]);
 
   return (
