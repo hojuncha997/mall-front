@@ -6,55 +6,43 @@ const initState = {
   email: "",
 };
 
-
 const loadMemberCookie = () => {
-
-  const memberInfo = getCookie("member")
+  const memberInfo = getCookie("member");
 
   // 닉네임 처리
-  if(memberInfo && memberInfo.nickname) {
-    memberInfo.nickname = decodeURIComponent(memberInfo.nickname)
+  if (memberInfo && memberInfo.nickname) {
+    memberInfo.nickname = decodeURIComponent(memberInfo.nickname);
   }
-  return memberInfo
-}
+  return memberInfo;
+};
 
-
-
-
-
-
-export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
-  return loginPost(param)
-})
+export const loginPostAsync = createAsyncThunk("loginPostAsync", (param) => {
+  return loginPost(param);
+});
 
 const loginSlice = createSlice({
   name: "LoginSlice",
   // initialState: initState,
-  initialState: loadMemberCookie() || initState,  //  쿠키가 없다면 초깃값 사용
+  initialState: loadMemberCookie() || initState, //  쿠키가 없다면 초깃값 사용
   reducers: {
     login: (state, action) => {
       console.log("login....");
 
-      //{email, pw로 구성}
-      const data = action.payload
+      // {소셜로그인 회원이 사용}
+      const payload = action.payload;
 
-      // 입력란에 입력한 이메일이 애플리케이션의 상태가 된다.
-      // useSelector를 사용하는 메뉴에서는 email값이 존재하게 됐기 때문에
-      // email이 존재해야 사용할 수 있는 메뉴를 사용할 수 있게 된다.
-      return { email: data.email }
-      
+      setCookie("member", JSON.stringify(payload), 1); // 1일 동안 쿠키 보관
 
-
-
+      return payload;
     },
     logout: (state, action) => {
       console.log("logout...");
 
       // 쿠키에 저장된 데이터를 삭제한다.
-      removeCookie("member")
+      removeCookie("member");
 
       // 상태를 초기화한다.
-      return { ...initState }
+      return { ...initState };
     },
   },
 
@@ -63,23 +51,22 @@ const loginSlice = createSlice({
       .addCase(loginPostAsync.fulfilled, (state, action) => {
         console.log("loginPostAsync.fulfilled");
         // API 서버에서 로그인 시에 전송되는 데이터들을 상태 데이터로 보관하도록 처리.
-        const payload = action.payload
+        const payload = action.payload;
 
         // 정상적인 로그인 시에만 쿠키 저장
         if (!payload.error) {
-          setCookie("member", JSON.stringify(payload), 1) // 1일 동안 쿠키 보관
+          setCookie("member", JSON.stringify(payload), 1); // 1일 동안 쿠키 보관
         }
 
-
-        return payload
+        return payload;
       })
       .addCase(loginPostAsync.pending, (state, action) => {
         console.log("loginPostAsync.pending");
       })
       .addCase(loginPostAsync.rejected, (state, action) => {
         console.log("loginPostAsync.rejected");
-      })
-  }
+      });
+  },
 });
 
 export const { login, logout } = loginSlice.actions;
