@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { modifyMember } from "../../api/memberApi";
+import ResultModal from "../common/ResultModal";
 
 const initState = {
   email: "",
@@ -10,6 +11,8 @@ const initState = {
 
 const ModifyComponent = () => {
   const [member, setMember] = useState(initState);
+
+  const [result, setResult] = useState();
 
   //  로그인 정보를 가져오는 곳은 스토어의 loginSlice이다.
   const loginInfo = useSelector((state) => state.loginSlice);
@@ -23,12 +26,31 @@ const ModifyComponent = () => {
     setMember({ ...member });
   };
 
-  const handleClick = async () => {
-    modifyMember(member);
+  const handleClickModify = async () => {
+    modifyMember(member).then((result) => {
+      setResult("Modified");
+    });
+  };
+
+  const closeModal = () => {
+    setResult(null);
   };
 
   return (
     <div className="mt-6">
+      {result ? (
+        <>
+          {" "}
+          <ResultModal
+            title="회원정보"
+            content={"정보수정완료"}
+            callbackFn={closeModal}
+          />
+        </>
+      ) : (
+        <></>
+      )}
+
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
           <div className="w-1/5 p-6 text-right font-bold">Email</div>
@@ -73,7 +95,7 @@ const ModifyComponent = () => {
           <button
             type="button"
             className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-            onClick={handleClick}
+            onClick={handleClickModify}
           >
             Modify
           </button>
