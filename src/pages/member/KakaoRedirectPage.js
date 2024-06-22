@@ -9,10 +9,8 @@ import { login } from "../../slices/loginSlice";
 
 const KakaoRedirectPage = () => {
   const [searchParams] = useSearchParams();
-
-  const moveToPath = useCustomLogin;
-
   const dispatch = useDispatch();
+  const { moveToPath } = useCustomLogin(); // 이 부분을 컴포넌트 내부로 옮김
 
   const authCode = searchParams.get("code");
 
