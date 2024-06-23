@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "./slices/loginSlice";
+import cartSlice from "./slices/cartSlice";
 
 /*
     configureStore()의 파라미터에는 설정에 필요한 정보들을 객체로 전달하며,

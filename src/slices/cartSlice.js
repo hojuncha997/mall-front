@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getCartItems, postChageCart } from "../api/cartApi";
 
 // createThunk의 역할은 비동기 처리를 하는 함수를 생성하는 것이다. 아래 함수의 역할은 장바구니 목록을 가져오는 API를 호출하는 것이다.
