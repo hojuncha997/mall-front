@@ -39,7 +39,11 @@ const CartComponent = () => {
           <div>
             <ul>
               {cartItems.map((item) => (
-                <CartItemComponent {...item} key={item.cino} />
+                <CartItemComponent
+                  {...item}
+                  key={item.cino}
+                  changeCart={changeCart}
+                />
               ))}
             </ul>
           </div>
