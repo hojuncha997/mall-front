@@ -11,16 +11,9 @@ import loginSlice from "./slices/loginSlice";
 export default configureStore({
   reducer: {
     loginSlice: loginSlice,
+    cartSlice: cartSlice,
   },
 });
-
-
-
-
-
-
-
-
 
 /*
   애플리케이션의 상태를 변경하기 위해서는 리듀서 함수(login(), logout() 등)를 호출하거나 변경된 상태를 전달(notify-통지) 받아야만 한다.
