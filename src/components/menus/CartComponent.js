@@ -2,19 +2,23 @@ import { useEffect } from "react";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import { getCartItemsAsync } from "../../slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import useCustomCart from "../../hooks/useCustomCart";
 
 const CartComponent = () => {
   const { isLogin, loginState } = useCustomLogin();
 
-  const dispatch = useDispatch();
+  const { cartItems, refreshCart, changeCart } = useCustomCart();
 
-  const cartItems = useSelector((state) => state.cartSlice);
+  //   const dispatch = useDispatch();
+
+  //   const cartItems = useSelector((state) => state.cartSlice);
 
   useEffect(() => {
     if (isLogin) {
       // 만약 로그인 한 상태라면 리듀서인 cartSlice에 정의된 getCartItemsAsync 함수를 호출한다.
       // 이 함수는 장바구니 목록을 가져오는 API를 호출한다.
-      dispatch(getCartItemsAsync());
+      //   dispatch(getCartItemsAsync());
+      refreshCart();
     }
   }, [isLogin]);
 
