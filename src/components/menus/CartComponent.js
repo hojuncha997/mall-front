@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect , useMemo} from "react";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import { getCartItemsAsync } from "../../slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,19 @@ const CartComponent = () => {
   const { isLogin, loginState } = useCustomLogin();
 
   const { cartItems, refreshCart, changeCart } = useCustomCart();
+
+  const total = useMemo(() => {
+    
+    let total = 0;
+
+    for(const item of cartItems) {
+      total += item.price * item.qty;
+    }
+    return total;
+  }, [cartItems]);
+
+  
+
 
   //   const dispatch = useDispatch();
 
@@ -47,6 +60,11 @@ const CartComponent = () => {
                 />
               ))}
             </ul>
+          </div>
+          <div>
+            <div className="text-2xl text-right font-extrabold">
+              TOTAL: {total}
+            </div>
           </div>
         </div>
       ) : (
