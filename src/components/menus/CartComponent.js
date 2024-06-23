@@ -43,6 +43,7 @@ const CartComponent = () => {
                   {...item}
                   key={item.cino}
                   changeCart={changeCart}
+                  email={loginState.email}
                 />
               ))}
             </ul>

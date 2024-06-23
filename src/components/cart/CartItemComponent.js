@@ -8,11 +8,12 @@ const CartItemComponent = ({
   qty,
   imageFile,
   changeCart,
+  email,
 }) => {
   const host = API_SERVER_HOST;
 
   const handleClickQty = (amount) => {
-    changeCart({ cino: cino, pno: pno, qty: qty + amount });
+    changeCart({ cino: cino, pno: pno, qty: qty + amount, email: email });
   };
   return (
     <li key={cino} className="border-2">
