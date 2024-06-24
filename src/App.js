@@ -13,7 +13,7 @@ function App() {
     // 리액트 쿼리의 기본적 설정은 애플리케이션 내에서 리액트 쿼리의 QueryClient를 지정하는 것으로 실천
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={root} />
-      <ReactQueryDevtools initialIsOpen={ture} />
+      <ReactQueryDevtools initialIsOpen={true} />
     </QueryClientProvider>
   );
 }
