@@ -4,6 +4,7 @@ import useCustomMove from "../../hooks/useCustomMove";
 import FetchingModal from "../common/FetchingModal";
 import PageComponent from "../common/PageComponent";
 import useCustomLogin from "../../hooks/useCustomLogin";
+import { useQuery } from "@tanstack/react-query";
 
 // API서버에서 가져온 목록 데이터는 이미지 파일의 이름이 포함돼 있으므로 이를 화면에 출력해줄 때 서버의 경로를 시용해야 한다. 따라서 임포트
 import { API_SERVER_HOST } from "../../api/todoApi";
@@ -24,15 +25,19 @@ const initState = {
 
 const ListComponent = () => {
 
-  const {exceptionHandle} = useCustomLogin();
+  // const {exceptionHandle} = useCustomLogin();
+  const {moveToLoginReturn} = useCustomLogin();
 
   const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+
+
+/*
+
+  // 리액트 쿼리 사용으로 인해 아래 코드는 주석 처리
 
   const [serverData, setServerData] = useState(initState);
 
   const [fetching, setFetching] = useState(false);
-
-  
 
   useEffect(() => {
     setFetching(true);
@@ -44,9 +49,31 @@ const ListComponent = () => {
     }).catch(err => exceptionHandle(err));
   }, [page, size, refresh]);
 
+  */
+
+
+  // reactQuery를 사용하였기 때문에 useState()를 사용하지 않아도 된다.
+  // 파라미터를 전달하고 받은 응답은 isFetching, data, error 등으로 구조분해할당하여 사용한다.
+const {isFetching, data, error, isError} = useQuery({
+  queryKey: ['products/list', {page, size}], 
+  queryFn: () => getList({page, size})}
+);
+
+// 에러가 발생했을 때 처리
+if(isError) {
+  console.log(error);
+  
+  return moveToLoginReturn();
+}
+
+const serverData = data || initState;
+
+
+
   return (
     <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-      {fetching ? <FetchingModal /> : <></>}
+      {/* {fetching ? <FetchingModal /> : <></>} */}
+      {isFetching ? <FetchingModal /> : <></>}
 
       <div className="flex flex-wrap mx-auto p-6">
         {serverData.dtoList.map((product) => (
