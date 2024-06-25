@@ -5,6 +5,9 @@ import { postAdd } from "../../api/productsApi";
 import FetchingModal from "../common/FetchingModal";
 import ResultModal from "../common/ResultModal";
 import useCustomMove from "../../hooks/useCustomMove";
+// 리액트 쿼리 사용
+import { useMutation } from "@tanstack/react-query";
+
 
 const initState = {
   pname: "",
@@ -14,22 +17,61 @@ const initState = {
 };
 
 const AddComponent = () => {
+
+  // 기본적으로 필요
   const [product, setProduct] = useState({ ...initState });
-
   const uploadRef = useRef();
+  const { moveToList } = useCustomMove();   //   이동을 위한 함수
 
-  const [fetching, setFetching] = useState(false);
-  const [result, setResult] = useState(null);
+  
+  // 리액트 쿼리 사용으로 인해 주석 처리
+  // const [fetching, setFetching] = useState(false);
+  // const [result, setResult] = useState(null);
 
-  //   이동을 위한 함수
-  const { moveToList } = useCustomMove();
-
+  
+  
+  // 입력값 처리
   const handleChangeProduct = (event) => {
     product[event.target.name] = event.target.value;
     setProduct({ ...product });
   };
 
+
+  // 리액트 쿼리 사용
+  const addMutation = useMutation((product) => {
+    alert("addMutation - postAdd(product) 실행");
+    return  postAdd(product)
+  });
+
+
   const handleClickAdd = (event) => {
+
+    const files = uploadRef.current.files;
+    const formData = new FormData();
+    
+    //  폼데이터에 파일 추가
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+
+    //  other data
+    formData.append("pname", product.pname);
+    formData.append("pdesc", product.pdesc);
+    formData.append("price", product.price);
+
+  
+    //  리액트 쿼리 사용하여 API 전송
+    addMutation.mutate(formData);
+
+  }
+
+
+
+
+/*
+  리액트 쿼리 사용 전
+
+const handleClickAdd = (event) => {
     const files = uploadRef.current.files;
     const formData = new FormData();
 
@@ -51,13 +93,21 @@ const AddComponent = () => {
     });
   };
 
+  */
+
+
+
+
   const closeModal = () => {
-    setResult(null);
+    // setResult(null); // 리액트 쿼리 사용으로 미사용
     moveToList({ page: 1 }); // 모달이 닫히면 이동
   };
 
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
+      {/*
+        모달창들 잠시 주석처리
+
       {fetching ? <FetchingModal /> : <></>}
       {result ? (
         <ResultModal
@@ -67,7 +117,7 @@ const AddComponent = () => {
         />
       ) : (
         <></>
-      )}
+      )} */}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -116,7 +166,7 @@ const AddComponent = () => {
           <input
             ref={uploadRef} // useRef 사용
             className="w-4/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="price"
+            name="files"
             type={"file"}
             multiple={true}
           />
@@ -155,3 +205,16 @@ export default AddComponent;
     useRef를 이용할 때는 current라는 속성을 활용해서 현재 DOM 객체를 참조한다.
     Ajax를 전송할 때는 FormData 객체를 통해서 모든 내용을 담아서 전송한다.
  */
+
+
+
+  /*
+
+    리액트 쿼리
+
+    리액트 쿼리에서 가장 중요한 기능은 useQuery()와 useMutation()이다.
+    SQL로 비유하자면 useQuery()는 SELECT문에 해당하고 useMutation()은 INSERT, UPDATE, DELETE문에 해당한다.
+    useMutation()은 useQuery()와 달리 데이터를 변경하는 작업을 수행한다.
+    useMutation()은 서버를 호출하는 함수를 파라미터로 받는다. 그리고 mutate()를 사용해서 처리 결과에 대한 다양한 정보를 얻을 수 있다.
+
+  */
