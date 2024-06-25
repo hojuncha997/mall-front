@@ -8,7 +8,6 @@ import useCustomMove from "../../hooks/useCustomMove";
 // 리액트 쿼리 사용
 import { useMutation } from "@tanstack/react-query";
 
-
 const initState = {
   pname: "",
   pdesc: "",
@@ -17,58 +16,64 @@ const initState = {
 };
 
 const AddComponent = () => {
-
   // 기본적으로 필요
   const [product, setProduct] = useState({ ...initState });
   const uploadRef = useRef();
-  const { moveToList } = useCustomMove();   //   이동을 위한 함수
+  const { moveToList } = useCustomMove(); //   이동을 위한 함수
 
-  
   // 리액트 쿼리 사용으로 인해 주석 처리
   // const [fetching, setFetching] = useState(false);
   // const [result, setResult] = useState(null);
 
-  
-  
   // 입력값 처리
   const handleChangeProduct = (event) => {
     product[event.target.name] = event.target.value;
     setProduct({ ...product });
   };
 
-
+  /*
   // 리액트 쿼리 사용
   const addMutation = useMutation((product) => {
     alert("addMutation - postAdd(product) 실행");
     return  postAdd(product)
   });
+  */
 
+  //  리액트 쿼리가 5버전으로 업그레이드 되면서 useMutation() 함수의 사용법이 변경되었다.
+  // 파라미터로 객체를 받아서 사용하게 되었다.
+  // 객체는 mutationFn, onError, onSuccess 등을 속성으로 가진다.
+  const addMutation = useMutation({
+    mutationFn: (product) => {
+      alert("addMutation - postAdd(product) 실행");
+      return postAdd(product);
+    },
+    onError: (error) => {
+      console.error("Mutation failed: ", error);
+    },
+    onSuccess: (data) => {
+      console.log("Mutation succeeded: ", data);
+      // 이동 처리나 다른 후속 작업
+      moveToList({ page: 1 });
+    },
+  });
 
   const handleClickAdd = (event) => {
-
     const files = uploadRef.current.files;
     const formData = new FormData();
-    
-    //  폼데이터에 파일 추가
+
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
 
-    //  other data
     formData.append("pname", product.pname);
     formData.append("pdesc", product.pdesc);
     formData.append("price", product.price);
 
-  
-    //  리액트 쿼리 사용하여 API 전송
+    console.log("Form Data: ", formData);
     addMutation.mutate(formData);
+  };
 
-  }
-
-
-
-
-/*
+  /*
   리액트 쿼리 사용 전
 
 const handleClickAdd = (event) => {
@@ -94,9 +99,6 @@ const handleClickAdd = (event) => {
   };
 
   */
-
-
-
 
   const closeModal = () => {
     // setResult(null); // 리액트 쿼리 사용으로 미사용
@@ -206,9 +208,7 @@ export default AddComponent;
     Ajax를 전송할 때는 FormData 객체를 통해서 모든 내용을 담아서 전송한다.
  */
 
-
-
-  /*
+/*
 
     리액트 쿼리
 
