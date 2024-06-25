@@ -53,7 +53,7 @@ const AddComponent = () => {
     onSuccess: (data) => {
       console.log("Mutation succeeded: ", data);
       // 이동 처리나 다른 후속 작업
-      moveToList({ page: 1 });
+      // moveToList({ page: 1 });
     },
   });
 
@@ -107,19 +107,18 @@ const handleClickAdd = (event) => {
 
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-      {/*
-        모달창들 잠시 주석처리
+      {/* // 모달창들 잠시 주석처리 */}
 
-      {fetching ? <FetchingModal /> : <></>}
-      {result ? (
+      {addMutation.isLoading ? <FetchingModal /> : <></>}
+      {addMutation.isSuccess ? (
         <ResultModal
           title={"Product Add Result"}
-          content={`${result}번 등록 완료`}
+          content={`Add Success ${addMutation.data.result}`}
           callbackFn={closeModal}
         />
       ) : (
         <></>
-      )} */}
+      )}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
