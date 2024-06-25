@@ -6,7 +6,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // QueryClient 인스턴스 생성
 const queryClient = new QueryClient();
 
-// initialIsOpen 속성을 true로 설정하면 개발자 도구가 초기에 열린다.
 
 function App() {
   return (
@@ -19,3 +18,29 @@ function App() {
 }
 
 export default App;
+
+
+
+/*
+
+쿼리 클라이언트 인스턴스를 생성할 때 아래와 같이 옵션을 넣어줄 수 있다.
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchOnMount: true,
+      staleTime: 0,
+    },
+  },
+});
+
+
+...
+
+// initialIsOpen 속성을 true로 설정하면 개발자 도구가 초기에 열린다.
+<ReactQueryDevtools initialIsOpen={true} />
+
+
+*/
