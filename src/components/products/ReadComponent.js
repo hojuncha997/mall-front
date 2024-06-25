@@ -56,9 +56,10 @@ const ReadComponent = ({ pno }) => {
   /**
    * eact Query 버전 5에서는 useQuery와 같은 함수에 인자를 전달하는 방식에 대한 요구사항이 엄격해졌다
    * v5로 이행하면서, 모든 쿼리 관련 함수 호출에는 인자를 오브젝트 형태로만 전달해야 한다.
-   * 이전 버전에서는 배열 형식으로 인자를 전달할 수 있었지만, 5 버전부터는 아래와 같이 인자를 오브젝트 형태로 전달해야 한다:
+   * 또한 option설정(staleTime 등)을 options 객체로 감싸지 않고 직접 파라미터로 넘긴다.
    *  아래 코드를 통해 돌아오는 값은 isFetching, data, error 등이다.
-   */
+   
+  // 이 코드 역시 options 객체를 사용해서 넘겼으므로 리액트 쿼리 5의 문법에는 맞지 않는다.
   const { isFetching, data } = useQuery({
     queryKey: ["products", pno],
     queryFn: () => getOne(pno),
@@ -67,9 +68,17 @@ const ReadComponent = ({ pno }) => {
       retry: 1,
     },
   });
+*/
+  const { isFetching, data } = useQuery({
+    queryKey: ["products", pno],
+    queryFn: () => getOne(pno),
+    staleTime: 1000 * 10,
+    retry: 1,
+  });
 
-  //   fetching
-  const [fetching, setFetching] = useState(false);
+
+  //   fetching: 리액트 쿠리 사용으로 인해 사용하지 않는다.
+  // const [fetching, setFetching] = useState(false);
 
   //   장바구니 기능
   const { changeCart, cartItems } = useCustomCart();
