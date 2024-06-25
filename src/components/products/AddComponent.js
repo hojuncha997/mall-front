@@ -6,7 +6,7 @@ import FetchingModal from "../common/FetchingModal";
 import ResultModal from "../common/ResultModal";
 import useCustomMove from "../../hooks/useCustomMove";
 // 리액트 쿼리 사용
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const initState = {
   pname: "",
@@ -20,6 +20,8 @@ const AddComponent = () => {
   const [product, setProduct] = useState({ ...initState });
   const uploadRef = useRef();
   const { moveToList } = useCustomMove(); //   이동을 위한 함수
+
+  const queryClient = useQueryClient();
 
   // 리액트 쿼리 사용으로 인해 주석 처리
   // const [fetching, setFetching] = useState(false);
@@ -102,6 +104,9 @@ const handleClickAdd = (event) => {
 
   const closeModal = () => {
     // setResult(null); // 리액트 쿼리 사용으로 미사용
+
+    // 등록 후 목록으로 갔을 때 캐싱된 데이터를 무효화 하고 목록을 갱신하여 새로운 데이터를 가져오기 위해 invalidateQueries()를 호출한다.
+    queryClient.invalidateQueries("products/list"); // 목록화면 갱신
     moveToList({ page: 1 }); // 모달이 닫히면 이동
   };
 
@@ -217,3 +222,13 @@ export default AddComponent;
     useMutation()은 서버를 호출하는 함수를 파라미터로 받는다. 그리고 mutate()를 사용해서 처리 결과에 대한 다양한 정보를 얻을 수 있다.
 
   */
+
+/*
+  등록 후 처리
+
+  목록화면에서 사용하는 useQuery()의 staleTime이 짧은 경우에는 문제가 되지 않겠지만 staleTime이 긴 경우에는
+  새로운 상품을 등록해도 목록으로 이동한 경우에 서버를 호출하지 않기 때문에 기존 페이지가 그대로 유지되는 현상이 생길 수 있다.
+
+  이를 해결하기 위해서는 AddComponent에서 모달창을 닫을 때 invalidateQueries()를 호출하여 목록화면을 갱신해야 한다.
+
+*/
