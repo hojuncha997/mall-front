@@ -4,6 +4,8 @@ import FetchingModal from "../common/FetchingModal";
 import { API_SERVER_HOST } from "../../api/todoApi";
 import useCustomMove from "../../hooks/useCustomMove";
 import ResultModal from "../common/ResultModal";
+import { useQuery } from "@tanstack/react-query";
+
 
 const initState = {
   pno: 0,
@@ -24,6 +26,40 @@ const ModifyComponent = ({ pno }) => {
   const uploadRef = useRef();
   const { moveToRead, moveToList } = useCustomMove();
 
+
+  // 리액트 쿼리 사용
+  const query = useQuery({
+    queryKey: ["products", pno],
+    queryFn: () => getOne(pno),
+    staleTime: Infinity,
+  });
+
+  useEffect(() => {
+    if (query.isSuccess) {
+      setProduct(query.data);
+    }
+  },
+  // pno가 포함된 이유는 pno가 변경될 때마다 다시 조회해야 하기 때문이다. 
+  [pno, query.data, query.isSuccess]);
+
+  /*
+  useQuery()가 성공했을 경우 setProduct()를 하기 위해서 과거에는 onSuccess를 옵션으로 지정할 수 있었다.
+  이 방식은 deprecated 됐으므로 상태를 이용해서 처리해야 한다.
+  때문에 useQuery()의 결과를 직접 setProduct()로 지정해야 하는데 이 경우 무한히 컴포넌트의 상태가 변경되었기 때문에
+  무한반복에 빠지는 코드가 된다.
+
+  // ****절대 실행하면 안되는 무한 반복
+  if(query.isSuccess){
+    setProduct(query.data);
+  }
+
+  이 문제를 해결하기 위해서는 useEffect()를 이용해서 온전히 데이터가 존재하고 성공했을 경우에만
+  setProduct()를 호출하도록 조정한다. 또한 조회와 달리 수정 중간에 다시 API 서버를 호출하지 않도록 staleTime을 infinity로 설정한다.
+  
+  /*
+
+  // 리액트 쿼리 사용으로 인해 주석 처리
+
   useEffect(() => {
     setFetching(true);
     getOne(pno).then((data) => {
@@ -31,6 +67,8 @@ const ModifyComponent = ({ pno }) => {
       setFetching(false);
     });
   }, [pno]);
+
+  */
 
   const handleChangeProduct = (event) => {
     product[event.target.name] = event.target.value;
@@ -66,32 +104,44 @@ const ModifyComponent = ({ pno }) => {
       formData.append("uploadFileNames", product.uploadFileNames[i]);
     }
 
-    setFetching(true);
-    putOne(pno, formData).then((data) => {
-      setResult("Modified");
-      setFetching(false);
-    });
+    // 리액트 쿼리 사용으로 인해 주석 처리
+    // setFetching(true);
+    // putOne(pno, formData).then((data) => {
+    //   setResult("Modified");
+    //   setFetching(false);
+    // });
+
+
+
   };
 
   const handleClickDelete = () => {
-    setFetching(true);
-    deleteOne(pno).then((data) => {
-      setResult("Deleted");
-      setFetching(false);
-    });
+
+    // 리액트 쿼리 사용으로 인해 주석 처리
+    // setFetching(true);
+    // deleteOne(pno).then((data) => {
+    //   setResult("Deleted");
+    //   setFetching(false);
+    // });
   };
 
   const closeModal = () => {
-    if (result === "Modified") {
-      moveToRead(pno);
-    } else if (result === "Deleted") {
-      moveToList({ page: 1 });
-    }
-    setResult(null);
+
+
+    // 리액트 쿼리 사용으로 인해 주석 처리
+    // if (result === "Modified") {
+    //   moveToRead(pno);
+    // } else if (result === "Deleted") {
+    //   moveToList({ page: 1 });
+    // }
+    // setResult(null);
   };
 
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
+      {/* 
+      // 리액트 쿼리 사용으로 인해 주석 처리
+      
       {fetching ? <FetchingModal /> : <></>}
 
       {result ? (
@@ -102,7 +152,9 @@ const ModifyComponent = ({ pno }) => {
         />
       ) : (
         <></>
-      )}
+      )} */}
+
+      {query.isFetching ? <FetchingModal /> : <></>}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -227,4 +279,16 @@ export default ModifyComponent;
 
 수정 작업은 등록과 마찬가지로 첨부파일이 존재하기 때문에 'multipart/form-data' 헤더를 설정해서 전송처리를 해야 한다.
 
+*/
+
+
+/*
+  리액트 쿼리 사용
+
+  상품 수정은 조회와 등록 기능이 같이 존재하기 때문에 useQuery()와 useMutation()을 이용해서 사용해야 한다.
+  상품 수정 처리는 기본적으로 아래의 흐름을 따라서 처리된다.
+
+  - useQuery()를 이용해서 상품 데이터를 가져온 후 컴포넌트의 상태 값으로 지정한다.
+  - <input>을 이용해서 컴포넌트의 상태로 유지되는 데이터를 수정한다.
+  - 수정이나 삭제를 처리한 후 화면을 이동하게 한다.
 */
