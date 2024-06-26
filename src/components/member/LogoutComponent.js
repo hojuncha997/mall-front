@@ -2,6 +2,8 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../slices/loginSlice";
 import useCustomLogin from "../../hooks/useCustomLogin";
 
+import { cartState } from "../../atoms/cartState";
+
 const LogoutComponent = () => {
 
     
@@ -12,7 +14,9 @@ const LogoutComponent = () => {
 
     const handleClickLogout = () => {
         // dispatch(logout())
+        console.log("cartState before logout: ", cartState)
         doLogout()
+        console.log("cartState before logout: ", cartState)
         alert("로그아웃 되었습니다.")
         moveToPath("/")
     }

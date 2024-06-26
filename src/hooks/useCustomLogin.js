@@ -14,6 +14,7 @@ import signinState from "../atoms/signinState";
 
 // 쿠키
 import { removeCookie, setCookie } from "../util/cookieUtil";
+import { cartState } from "../atoms/cartState";
 
 const useCustomLogin = () => {
 
@@ -36,7 +37,7 @@ const useCustomLogin = () => {
     // 리코일 사용
     const [loginState, setLoginState] = useRecoilState(signinState);
     const resetState = useResetRecoilState(signinState);
-    const resetCartState = useResetRecoilState(signinState);
+    const resetCartState = useResetRecoilState(cartState);  // ------------장바구니 리코일 상태 초기화
 
     const isLogin = loginState.email ? true : false;    // ---------------로그인 여부
 
