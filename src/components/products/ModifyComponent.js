@@ -26,11 +26,16 @@ const ModifyComponent = ({ pno }) => {
   const uploadRef = useRef();
   const { moveToRead, moveToList } = useCustomMove();
 
+  // 쿼리키를 파라미터로 받아서 invalidateQueries()를 이용해서 데이터를 무효화 하고, 쿼리를 다시 조회하도록 하기 위해 사용
   const queryClient = useQueryClient();
 
+  // 리액트 쿼리를 사용해서 상품을 삭제하기 위해 사용
   const delMutation = useMutation({
     mutationFn: (pno) => deleteOne(pno),
   })
+
+  // 리액트 쿼리를 사용해서 상품을 수정하기 위해 사용
+  const modMutation = useMutation({mutationFn: (product) => putOne(pno, product)})
 
 
   // 리액트 쿼리 사용
@@ -117,7 +122,8 @@ const ModifyComponent = ({ pno }) => {
     //   setFetching(false);
     // });
 
-
+    // 리액트 쿼리 사용
+    modMutation.mutate(formData);
 
   };
 
@@ -139,6 +145,14 @@ const ModifyComponent = ({ pno }) => {
       queryClient.invalidateQueries(["products", pno]);
       queryClient.invalidateQueries(["products/list"]);
       moveToList();
+      // 여기서 return을 쓰는 이유는 아래의 코드가 실행되지 않도록 하기 위해서이다.
+      return;
+    }
+
+    if(modMutation.isSuccess){
+      queryClient.invalidateQueries(["products", pno]);
+      queryClient.invalidateQueries(["products/list"]);
+      moveToRead(pno);
     }
 
     // 리액트 쿼리 사용으로 인해 주석 처리
@@ -167,8 +181,9 @@ const ModifyComponent = ({ pno }) => {
         <></>
       )} */}
 
-      {query.isFetching || delMutation.isLoading ? <FetchingModal /> : <></>}
-      {delMutation.isSuccess ? (
+      {query.isFetching || delMutation.isLoading || modMutation.isSuccess ? <FetchingModal /> : <></>}
+      
+      {delMutation.isSuccess || modMutation.isSuccess ? (
         <ResultModal
           title={`처리결과`}
           content={"정상적으로 처리되었습니다"}
