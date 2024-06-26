@@ -72,7 +72,7 @@ const ReadComponent = ({ pno }) => {
   const { isFetching, data } = useQuery({
     queryKey: ["products", pno],
     queryFn: () => getOne(pno),
-    staleTime: 1000 * 10,
+    staleTime: 1000 * 10 * 60,  // 10분
     retry: 1,
   });
 
@@ -84,7 +84,9 @@ const ReadComponent = ({ pno }) => {
   const { changeCart, cartItems } = useCustomCart();
 
   // 로그인 정보
-  const { isLogin, loginState } = useCustomLogin();
+  //  리코일 사용으로 인해 사용하지 않는다.
+  // const { isLogin, loginState } = useCustomLogin();
+  const { loginState } = useCustomLogin();
 
   // 장바구니 추가 버튼 클릭시
   const handleClickAddCart = () => {
