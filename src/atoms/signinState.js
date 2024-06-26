@@ -1,12 +1,46 @@
 import { atom } from "recoil";
+import { getCookie } from "../util/cookieUtil";
 
 const initState = {
     email: "",
+    nickname: "",
+    social: false,
+    accessToken: "",
+    refreshToken: "",
 }
+
+
+const loadMemberCookie = () => {    //쿠키에서 체크
+ 
+    // 쿠키에서 회원 정보를 가져온다.
+    const memberInfo = getCookie("member");
+
+    // 닉네임 처리
+    if(memberInfo && memberInfo.nickname) {
+     memberInfo.nickname = decodeURIComponent(memberInfo.nickname);
+    }
+
+    return memberInfo;
+
+    /**
+        새로 고침 시 로그인한 모든 정보가 사라지는 현상을 방지하기 위해 쿠키를 사용한다.
+        쿠키에 저장된 회원 정보를 불러와서 상태로 사용한다. 
+    
+        만약 쿠키에 저장된 회원 정보가 있다면 이를 반환하고, 없다면 초기 상태를 반환한다.
+     */
+
+
+}
+
+
+
+
+
+
 
 const signinState = atom({
     key: "signinState",
-    default: initState,
+    default: loadMemberCookie() || initState,
 })
 
 export default signinState;
