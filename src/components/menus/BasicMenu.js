@@ -1,13 +1,18 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 const BasicMenu = () => {
 
 
-
+  /*
+  // recoil사용으로 인한 redux-toolkit 주석 처리
   const loginState = useSelector(state => state.loginSlice)
+  */
 
-
+  // useCustomLogin에 선언해 놓은 리코일 상태를 가져와서 사용한다.
+  const {loginState} = useCustomLogin();
+  // alert("loginState: " + loginState.email);
 
   return (
     <nav id="navbar" className="flex bg-blue-300">

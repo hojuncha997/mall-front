@@ -1,25 +1,86 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Navigate, createSearchParams } from "react-router-dom";
-import { loginPostAsync, logout } from "../slices/loginSlice";
+
+// 리코일 사용으로 인한 리덕스 툴킷 사용 주석 처리
+// import { loginPostAsync, logout } from "../slices/loginSlice";
+// 따라서 리듀서를 사용하지 않고 직접 api를 호출하는 방식으로 변경
+import { loginPost } from "../api/memberApi";
+
+
+
+// 리코일
+import { useRecoilState, useResetRecoilState } from "recoil";
+import signinState from "../atoms/signinState";
+
+// 쿠키
+import { removeCookie, setCookie } from "../util/cookieUtil";
 
 const useCustomLogin = () => {
 
+   
     const navigate = useNavigate();
 
-    const dispatch = useDispatch();
 
+    /*
+    // 리코일 사용으로 인한 리덕스 툴킷 사용 주석 처리
+    const dispatch = useDispatch();
+    */
+
+
+    /*
+    // 리코일 사용으로 인한 리덕스 툴킷 사용 주석 처리
+    
     const loginState = useSelector(state => state.loginSlice)   // -------로그인 상태
+    */
+
+    // 리코일 사용
+    const [loginState, setLoginState] = useRecoilState(signinState);
+    const resetState = useResetRecoilState(signinState);
 
     const isLogin = loginState.email ? true : false;    // ---------------로그인 여부
+
+    /*
+    // 리코일 사용으로 인한 리덕스 툴킷 사용 주석 처리
 
     const doLogin = async (loginParam) => {     // -----------------------로그인 함수
         const action = await dispatch(loginPostAsync(loginParam))
         return action.payload
     }
+    */
+
+    
+    const doLogin = async (loginParam) => {     // -----------------------로그인 함수
+        const result = await loginPost(loginParam)
+        console.log("recoil login result: ", result)
+        saveAsCookie(result);
+        return result;
+        
+    }
+
+    // 리코일 사용(setLoginState)
+    const saveAsCookie = (data) => {
+        // alert("saveAsCookie: " + JSON.stringify(data));
+        setCookie("member", JSON.stringify(data), 1);   // -----------------쿠키 저장(1일간 유지)
+        setLoginState(data);    // ----------------------------------------리코일 상태 저장
+    }
+
+
+    /*
+    //  리코일 사용으로 인한 리덕스 툴킷 사용 주석 처리
 
     const doLogout = () => {    // --------------------------------------로그아웃 함수
         dispatch(logout())
     }
+    */
+
+    const doLogout = () => {    // --------------------------------------로그아웃 함수
+        removeCookie("member");    // -----------------------------------쿠키 제거
+        resetState()
+    }
+
+
+
+
 
     const moveToPath = (path) => {    // --------------------------------경로 이동 함수
         navigate({ pathname: path }, { replace: true })
@@ -58,7 +119,7 @@ const useCustomLogin = () => {
 
 
 
-    return { loginState, isLogin, doLogin, doLogout, moveToPath, moveToLogin, moveToLoginReturn, exceptionHandle }
+    return { loginState, isLogin, doLogin, doLogout, saveAsCookie, moveToPath, moveToLogin, moveToLoginReturn, exceptionHandle }
 
 }
 
