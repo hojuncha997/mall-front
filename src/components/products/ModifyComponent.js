@@ -4,7 +4,7 @@ import FetchingModal from "../common/FetchingModal";
 import { API_SERVER_HOST } from "../../api/todoApi";
 import useCustomMove from "../../hooks/useCustomMove";
 import ResultModal from "../common/ResultModal";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 const initState = {
@@ -25,6 +25,12 @@ const ModifyComponent = ({ pno }) => {
 
   const uploadRef = useRef();
   const { moveToRead, moveToList } = useCustomMove();
+
+  const queryClient = useQueryClient();
+
+  const delMutation = useMutation({
+    mutationFn: (pno) => deleteOne(pno),
+  })
 
 
   // 리액트 쿼리 사용
@@ -117,6 +123,8 @@ const ModifyComponent = ({ pno }) => {
 
   const handleClickDelete = () => {
 
+    delMutation.mutate(pno);
+
     // 리액트 쿼리 사용으로 인해 주석 처리
     // setFetching(true);
     // deleteOne(pno).then((data) => {
@@ -127,6 +135,11 @@ const ModifyComponent = ({ pno }) => {
 
   const closeModal = () => {
 
+    if(delMutation.isSuccess){
+      queryClient.invalidateQueries(["products", pno]);
+      queryClient.invalidateQueries(["products/list"]);
+      moveToList();
+    }
 
     // 리액트 쿼리 사용으로 인해 주석 처리
     // if (result === "Modified") {
@@ -154,7 +167,16 @@ const ModifyComponent = ({ pno }) => {
         <></>
       )} */}
 
-      {query.isFetching ? <FetchingModal /> : <></>}
+      {query.isFetching || delMutation.isLoading ? <FetchingModal /> : <></>}
+      {delMutation.isSuccess ? (
+        <ResultModal
+          title={`처리결과`}
+          content={"정상적으로 처리되었습니다"}
+          callbackFn={closeModal}
+        />
+      ) : (
+        <></>
+      )}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
