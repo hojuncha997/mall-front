@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// useDispatch()를 통해 리덕스 스토어에 액션을 전달한다.
-import { useDispatch } from "react-redux";
+// useDispatch()를 통해 리덕스 스토어에 액션을 전달한다.: 리코일 사용으로 주석 처리
+// import { useDispatch } from "react-redux";
 
 // 리듀서(함수) 임포트
 import { login } from "../../slices/loginSlice";
 
-// 비동기 로그인 처리를 위한 함수 임포트
-import { loginPostAsync } from "../../slices/loginSlice";
+// 비동기 로그인 처리를 위한 함수 임포트: 리코일 사용으로 주석 처리
+// import { loginPostAsync } from "../../slices/loginSlice";
 
 // 로그인과 관련된 커스텀 훅
 import useCustomLogin from "../../hooks/useCustomLogin";
@@ -24,8 +24,8 @@ const initState = {
 const LoginComponent = () => {
   const [loginParam, setLoginParam] = useState(initState);
 
-  // 디스패치 함수
-  const dispatch = useDispatch();
+  // 디스패치 함수: 리코일 사용으로 주석 처리
+  // const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
