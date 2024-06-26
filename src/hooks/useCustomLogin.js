@@ -36,6 +36,7 @@ const useCustomLogin = () => {
     // 리코일 사용
     const [loginState, setLoginState] = useRecoilState(signinState);
     const resetState = useResetRecoilState(signinState);
+    const resetCartState = useResetRecoilState(signinState);
 
     const isLogin = loginState.email ? true : false;    // ---------------로그인 여부
 
@@ -75,7 +76,8 @@ const useCustomLogin = () => {
 
     const doLogout = () => {    // --------------------------------------로그아웃 함수
         removeCookie("member");    // -----------------------------------쿠키 제거
-        resetState()
+        resetState()    // ----------------------------------------------리코일 상태 초기화
+        resetCartState() // --------------------------------------------장바구니 리코일 상태 초기화
     }
 
 
