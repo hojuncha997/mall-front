@@ -5,10 +5,23 @@ import { useDispatch, useSelector } from "react-redux";
 import useCustomCart from "../../hooks/useCustomCart";
 import CartItemComponent from "../cart/CartItemComponent";
 
+// 리코일
+import { useRecoilValue } from "recoil";
+import { cartTotalState } from "../../atoms/cartState";
+
 const CartComponent = () => {
   const { isLogin, loginState } = useCustomLogin();
 
-  const { cartItems, refreshCart, changeCart } = useCustomCart();
+  // useCustomCart에 리코일을 적용하면서 refreshCart를 사용하지 않게 되었다.
+  // const { cartItems, refreshCart, changeCart } = useCustomCart();
+  const { cartItems, changeCart } = useCustomCart();
+
+  // 리코일을 사용하여 cartTotalState를 가져온다. cartTotalState는 atoms/cartState.js에 정의되어 있다.
+  const totalValue = useRecoilValue(cartTotalState);
+
+
+  /*
+  // 리코일을 사용하여 cartState에 있는 cartTotalState를 가져오기 때문에 아래와 같이 total을 계산할 필요가 없어졌다.
 
   const total = useMemo(() => {
     
@@ -20,6 +33,7 @@ const CartComponent = () => {
     return total;
   }, [cartItems]);
 
+  */
   
 
 
@@ -27,6 +41,7 @@ const CartComponent = () => {
 
   //   const cartItems = useSelector((state) => state.cartSlice);
 
+  /*
   useEffect(() => {
     if (isLogin) {
       // 만약 로그인 한 상태라면 리듀서인 cartSlice에 정의된 getCartItemsAsync 함수를 호출한다.
@@ -35,6 +50,7 @@ const CartComponent = () => {
       refreshCart();
     }
   }, [isLogin]);
+  */
 
   return (
     <div className="w-full">
@@ -62,8 +78,8 @@ const CartComponent = () => {
             </ul>
           </div>
           <div>
-            <div className="text-2xl text-right font-extrabold">
-              TOTAL: {total}
+            <div className="text-3xl m-2">
+              TOTAL: {totalValue}
             </div>
           </div>
         </div>
